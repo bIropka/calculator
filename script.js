@@ -1,69 +1,63 @@
-var buttons = Array.from(document.getElementsByTagName('button'));
+var calculator,
+    btnOn = document.getElementById('on'),
+    btnOff = document.getElementById('off'),
+    numbers = Array.from(document.getElementsByClassName('number')),
+    btnPlus = document.getElementById('addition'),
+    btnMinus = document.getElementById('subtraction'),
+    btnMultiply = document.getElementById('multiply'),
+    btnDivide = document.getElementById('division'),
+    btnSqrt = document.getElementById('sqrt'),
+    btnRemove = document.getElementById('remove'),
+    btnNegative = document.getElementById('negative'),
+    screen = document.getElementById('screen');
 
-buttons.forEach(function(item) {
-    item.addEventListener('click', function() {
-        buttonClicked(this);
+btnOn.addEventListener('click', function () {
+    calculator = new Calculator();
+});
+
+btnOff.addEventListener('click', function () {
+    calculator = null;
+});
+
+numbers.forEach(function (item) {
+    item.addEventListener('click', function () {
+        if (calculator) {
+            calculator.renderSymbol(this.innerText);
+        }
     });
 });
 
-function buttonClicked(button) {
-    var input = button.innerText;
-    switch (button.className) {
-        case 'number':
-            buttonNumberClicked(input);
-            break;
-        case 'operator':
-            buttonOperatorClicked(input);
-            console.log(input);
-            break;
-        case 'control':
-            buttonControlClicked(input);
-            break;
+btnRemove.addEventListener('click', function () {
+    if (calculator) {
+        calculator.removeSymbol();
     }
-}
+});
 
-function buttonNumberClicked(input) {
-    renderSymbol(input);
-}
-
-function buttonOperatorClicked(input) {
-    switch (input) {
-        case '+':
-
-            break;
-        case '-':
-
-            break;
-        case '&times;':
-
-            break;
-        case '/':
-
-            break;
-        case '&radic;':
-
-            break;
-        case '\&#8656;':
-            clearSymbol();
-            break;
-        case '+/-':
-
-            break;
+document.addEventListener('keypress', function () {
+    if (calculator) {
+        var code = event.code;
+        if (code.indexOf('Digit') !== -1) {
+            calculator.renderSymbol(event.code.split('Digit')[1]);
+        }
     }
+});
+
+function Calculator() {
+
+    this.maxSymbols = 25;
+
+    this.renderSymbol = function (symbol) {
+        if (screen.innerText.length <= this.maxSymbols) {
+            screen.innerText += symbol;
+        } else {
+            alert('you entered more than ' + this.maxSymbols + ' characters');
+        }
+    };
+
+    this.removeSymbol = function () {
+        if (screen.innerText.length) {
+            screen.innerText = screen.innerText.substring(0, screen.innerText.length - 1);
+        }
+    };
+
 }
-
-function buttonControlClicked(input) {
-
-}
-
-function renderSymbol(symbol) {
-    var screen = document.querySelector('.screen');
-    screen.innerText += symbol;
-}
-
-function clearSymbol() {
-    var screen = document.querySelector('.screen'),
-        current = screen.innerText;
-    screen.innerText = current.substring(0, current.length - 1);
-}
-
